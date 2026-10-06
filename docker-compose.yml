@@ -1,0 +1,95 @@
+# Optional: SearXNG for self-hosted search (requires Docker Desktop running)
+# Start with: docker compose up -d
+# Then set SEARCH_BACKEND=searxng in backend/.env
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    gpus: all
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    ports:
+      - "8080:8080"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080
+    volumes:
+      - searxng-data:/etc/searxng
+    restart: unless-stopped
+
+  judge0:
+    image: judge0/judge0:latest
+    container_name: judge0
+    ports:
+      - "2358:2358"
+    privileged: true
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    environment:
+      - RAILS_MAX_THREADS=4
+      - RAILS_ENV=production
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0password
+      - ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT=true
+      - ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT=true
+      - MEMORY_LIMIT=512000
+      - MAX_MEMORY_LIMIT=2560000
+    restart: unless-stopped
+
+  judge0-workers:
+    image: judge0/judge0:latest
+    container_name: judge0-workers
+    privileged: true
+    depends_on:
+      - judge0
+    command: ["./scripts/workers"]
+    environment:
+      - RAILS_MAX_THREADS=4
+      - RAILS_ENV=production
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0password
+      - ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT=true
+      - ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT=true
+      - MEMORY_LIMIT=512000
+      - MAX_MEMORY_LIMIT=2560000
+    restart: unless-stopped
+
+  judge0-db:
+    image: postgres:15
+    container_name: judge0-db
+    environment:
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0password
+    volumes:
+      - judge0-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  judge0-redis:
+    image: redis:7
+    container_name: judge0-redis
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
+  searxng-data:
+  judge0-db-data:
