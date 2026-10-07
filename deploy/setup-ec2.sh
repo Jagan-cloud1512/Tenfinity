@@ -8,7 +8,7 @@ echo "============================================"
 # --- System packages ---
 echo "[1/6] Installing system packages..."
 sudo apt-get update -qq
-sudo apt-get install -y -qq python3.11 python3.11-venv python3-pip gcc g++ git > /dev/null
+sudo apt-get install -y -qq python3 python3-venv python3-pip gcc g++ git > /dev/null
 
 # --- Clone repo ---
 echo "[2/6] Cloning repository..."
@@ -23,7 +23,7 @@ fi
 # --- Python venv + deps ---
 echo "[3/6] Setting up Python environment..."
 cd backend
-python3.11 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -q --upgrade pip
 pip install -q -r requirements.txt
