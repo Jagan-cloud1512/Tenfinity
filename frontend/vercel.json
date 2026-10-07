@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://YOUR-BACKEND-NAME.onrender.com/api/:path*"
+      "destination": "http://YOUR-EC2-PUBLIC-IP:8000/api/:path*"
     },
     {
       "source": "/(.*)",

@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from app.middleware.auth import get_current_user
 from app.services.coding_problems import generate_coding_problem
-from app.services.piston import run_against_test_cases
+from app.services.code_executor import run_against_test_cases
 from app.services.supabase_client import get_supabase_admin
 
 logger = logging.getLogger(__name__)

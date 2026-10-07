@@ -1,0 +1,84 @@
+services:
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-server
+    ports:
+      - "127.0.0.1:2358:2358"
+    depends_on:
+      judge0-db:
+        condition: service_started
+      judge0-redis:
+        condition: service_started
+    environment:
+      - RAILS_MAX_THREADS=2
+      - RAILS_ENV=production
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=${JUDGE0_DB_PASSWORD:-judge0secret}
+      - ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT=true
+      - ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT=true
+      - MEMORY_LIMIT=256000
+      - MAX_MEMORY_LIMIT=512000
+      - CPU_TIME_LIMIT=5
+      - MAX_CPU_TIME_LIMIT=10
+      - ENABLE_NETWORK=false
+      - MAX_PROCESSES_AND_OR_THREADS=30
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: false
+
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-workers
+    depends_on:
+      - judge0-server
+    command: ["./scripts/workers"]
+    environment:
+      - RAILS_MAX_THREADS=2
+      - RAILS_ENV=production
+      - REDIS_HOST=judge0-redis
+      - REDIS_PORT=6379
+      - POSTGRES_HOST=judge0-db
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=${JUDGE0_DB_PASSWORD:-judge0secret}
+      - ENABLE_PER_PROCESS_AND_THREAD_TIME_LIMIT=true
+      - ENABLE_PER_PROCESS_AND_THREAD_MEMORY_LIMIT=true
+      - MEMORY_LIMIT=256000
+      - MAX_MEMORY_LIMIT=512000
+      - CPU_TIME_LIMIT=5
+      - MAX_CPU_TIME_LIMIT=10
+      - ENABLE_NETWORK=false
+      - MAX_PROCESSES_AND_OR_THREADS=30
+      - COUNT=1
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  judge0-db:
+    image: postgres:15-alpine
+    container_name: judge0-db
+    environment:
+      - POSTGRES_DB=judge0
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=${JUDGE0_DB_PASSWORD:-judge0secret}
+    volumes:
+      - judge0-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: judge0-redis
+    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  judge0-db-data:

@@ -28,7 +28,8 @@ class Settings(BaseSettings):
     supabase_anon_key: str = ""
     supabase_service_role_key: str = ""
 
-    # Judge0 (legacy, only for local Docker setup)
+    # Code execution
+    code_executor: str = "piston"  # "piston" (subprocess) or "judge0" (Docker)
     judge0_url: str = "http://localhost:2358"
 
     # Server

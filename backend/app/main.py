@@ -57,7 +57,8 @@ app.include_router(certificate_router)
 async def global_exception_handler(request: Request, exc: Exception):
     tb = traceback.format_exc()
     logging.getLogger("uvicorn.error").error("Unhandled exception on %s %s:\n%s", request.method, request.url.path, tb)
-    return JSONResponse(status_code=500, content={"detail": str(exc)})
+    detail = str(exc) if settings.debug else "Internal server error"
+    return JSONResponse(status_code=500, content={"detail": detail})
 
 
 @app.get("/")
