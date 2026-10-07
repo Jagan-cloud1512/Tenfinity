@@ -15,7 +15,7 @@ for tid in topic_ids:
     if existing.data:
         db.table("learning_progress").update({"learning_status": "completed", "materials_viewed": True, "problems_suggested": 5, "problems_completed": 5}).eq("user_id", USER_ID).eq("topic_id", tid).eq("learning_phase", PHASE).execute()
     else:
-        db.table("learning_progress").insert({"user_id": USER_ID, "topic_id": tid, "learning_phase": PHASE, "learning_status": "completed", "materials_viewed": True, "problems_suggested": 5, "problems_completed": 5}).execute()
+        db.table("learning_progress").insert({"user_id": USER_ID, "topic_id": tid, "learning_phase": PHASE, "learning_status": "completed", "topic_status": "completed", "materials_viewed": True, "problems_suggested": 5, "problems_completed": 5}).execute()
     print(f"  Done topic {tid}")
 
 print("All topics completed!")
