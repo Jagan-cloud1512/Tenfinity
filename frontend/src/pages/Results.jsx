@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE } from '../lib/api';
 
-const API = '/api/learning';
+const API = `${API_BASE}/learning`;
 
 const LEVEL_CONFIG = {
   A: { label: 'Beginner', color: '#f59e0b', bg: 'from-amber-500/20 to-orange-500/20', border: 'border-amber-500/30' },

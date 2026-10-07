@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+import { API_BASE } from '../lib/api';
 
 export async function sendMessageStream(conversationId, message, mode, onEvent) {
   const res = await fetch(`${API_BASE}/chat`, {

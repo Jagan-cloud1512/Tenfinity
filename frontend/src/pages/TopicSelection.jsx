@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE } from '../lib/api';
 
 const CATEGORY_ORDER = ['Linear', 'Fundamental', 'Hierarchical', 'Graph', 'Algorithmic', 'Advanced'];
 
@@ -53,8 +54,8 @@ export default function TopicSelection() {
   const loadData = async () => {
     try {
       const [topicsRes, selectionsRes] = await Promise.all([
-        fetch('/api/topics'),
-        fetch('/api/topics/user', {
+        fetch(`${API_BASE}/topics`),
+        fetch(`${API_BASE}/topics/user`, {
           headers: { Authorization: `Bearer ${session.access_token}` },
         }),
       ]);
@@ -96,7 +97,7 @@ export default function TopicSelection() {
     }));
 
     try {
-      const res = await fetch('/api/topics/select', {
+      const res = await fetch(`${API_BASE}/topics/select`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ export default function TopicSelection() {
     }));
 
     try {
-      const res = await fetch('/api/topics/select', {
+      const res = await fetch(`${API_BASE}/topics/select`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,8 +2,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Editor from '@monaco-editor/react';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE } from '../lib/api';
 
-const API = '/api/coding';
+const API = `${API_BASE}/coding`;
 
 const LANGUAGES = [
   { id: 'python', label: 'Python', monacoId: 'python' },

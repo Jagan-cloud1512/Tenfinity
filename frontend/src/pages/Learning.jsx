@@ -5,9 +5,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { API_BASE } from '../lib/api';
 
-const API = '/api/learning';
-const CHAT_API = '/api/chat';
+const API = `${API_BASE}/learning`;
+const CHAT_API = `${API_BASE}/chat`;
 
 const LEVEL_CONFIG = {
   A: { label: 'Beginner', color: '#f59e0b', icon: '1' },

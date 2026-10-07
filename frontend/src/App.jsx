@@ -1,6 +1,7 @@
 import { lazy, Suspense, Component, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { API_BASE } from './lib/api';
 import Login from './pages/Login';
 
 const TopicSelection = lazy(() => import('./pages/TopicSelection'));
@@ -55,7 +56,7 @@ function SmartRedirect() {
 
   useEffect(() => {
     if (!session?.access_token) return;
-    fetch('/api/auth/progress', {
+    fetch(`${API_BASE}/auth/progress`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
     })
       .then(r => r.ok ? r.json() : null)

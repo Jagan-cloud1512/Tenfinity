@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { API_BASE } from '../lib/api';
 
 const AuthContext = createContext(null);
 
@@ -26,7 +27,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const signUp = async (email, password) => {
-    const res = await fetch('/api/auth/signup', {
+    const res = await fetch(`${API_BASE}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),

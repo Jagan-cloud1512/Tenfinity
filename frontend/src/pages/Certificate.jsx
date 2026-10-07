@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE } from '../lib/api';
 import { jsPDF } from 'jspdf';
 
-const API = '/api/certificate';
+const API = `${API_BASE}/certificate`;
 
 function drawCertificatePDF(data) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });

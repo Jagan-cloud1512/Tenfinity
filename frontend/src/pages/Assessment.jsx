@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAuth } from '../contexts/AuthContext';
+import { API_BASE } from '../lib/api';
 
 function Spinner({ text }) {
   return (
@@ -80,7 +81,7 @@ function QuestionCard({ question, index, total, onAnswer }) {
     if (selected === null || submitting) return;
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/assessment/answer/${question.id}`, {
+      const res = await fetch(`${API_BASE}/assessment/answer/${question.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -336,7 +337,7 @@ export default function Assessment() {
 
   const checkExisting = async () => {
     try {
-      const res = await fetch('/api/assessment/current', { headers });
+      const res = await fetch(`${API_BASE}/assessment/current`, { headers });
       if (!res.ok) throw new Error('Failed to check assessment');
       const data = await res.json();
 
@@ -370,7 +371,7 @@ export default function Assessment() {
     if (pollRef.current) clearInterval(pollRef.current);
     pollRef.current = setInterval(async () => {
       try {
-        const res = await fetch('/api/assessment/current', { headers });
+        const res = await fetch(`${API_BASE}/assessment/current`, { headers });
         if (!res.ok) return;
         const data = await res.json();
         if (!data.exists) return;
@@ -398,7 +399,7 @@ export default function Assessment() {
     setGenProgress({ generated: 0, total: 0 });
     setError('');
     try {
-      const res = await fetch('/api/assessment/start', {
+      const res = await fetch(`${API_BASE}/assessment/start`, {
         method: 'POST',
         headers,
       });
