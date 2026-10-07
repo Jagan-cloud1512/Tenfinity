@@ -24,7 +24,8 @@ sudo apt-get install -y -qq \
 
 # --- Enable automatic security updates ---
 echo "[3/8] Enabling automatic security updates..."
-sudo dpkg-reconfigure -plow unattended-upgrades 2>/dev/null || true
+echo 'Unattended-Upgrade::Allowed-Origins { "${distro_id}:${distro_codename}-security"; };' | sudo tee /etc/apt/apt.conf.d/51auto-security > /dev/null
+sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades 2>/dev/null || true
 
 # --- Firewall (UFW) ---
 echo "[4/8] Configuring firewall..."
