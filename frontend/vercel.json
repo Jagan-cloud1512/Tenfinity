@@ -1,12 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    {
-      "source": "/api/:match*",
-      "destination": "http://13.53.153.117:8000/api/:match*"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
