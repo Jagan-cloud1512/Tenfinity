@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from app.middleware.auth import get_current_user
 from app.services.final_assessment import generate_final_problem
-from app.services.judge0 import run_against_test_cases
+from app.services.piston import run_against_test_cases
 from app.services.progression import (
     check_learning_complete,
     ensure_progression,

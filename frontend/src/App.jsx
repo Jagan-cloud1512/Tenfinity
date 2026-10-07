@@ -10,6 +10,7 @@ const CodingAssessment = lazy(() => import('./pages/CodingAssessment'));
 const Learning = lazy(() => import('./pages/Learning'));
 const Results = lazy(() => import('./pages/Results'));
 const FinalAssessment = lazy(() => import('./pages/FinalAssessment'));
+const Certificate = lazy(() => import('./pages/Certificate'));
 
 function PageLoader() {
   return (
@@ -100,6 +101,7 @@ export default function App() {
             <Route path="/learning" element={<ProtectedRoute><Learning /></ProtectedRoute>} />
             <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
             <Route path="/final-assessment" element={<ProtectedRoute><FinalAssessment /></ProtectedRoute>} />
+            <Route path="/certificate" element={<ProtectedRoute><Certificate /></ProtectedRoute>} />
             <Route path="/" element={<ProtectedRoute><SmartRedirect /></ProtectedRoute>} />
             <Route path="*" element={<ProtectedRoute><SmartRedirect /></ProtectedRoute>} />
           </Routes>

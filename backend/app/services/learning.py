@@ -216,15 +216,19 @@ def suggest_problems(
     )
     is_completed = existing_progress.data and existing_progress.data[0]["learning_status"] == "completed"
 
-    db.table("learning_progress").upsert({
+    upsert_data = {
         "user_id": user_id,
         "topic_id": topic_id,
         "learning_phase": phase,
         "topic_status": topic_status,
         "learning_status": "completed" if is_completed else "in_progress",
         "problems_suggested": new_total,
-        "started_at": datetime.now(timezone.utc).isoformat(),
-    }, on_conflict="user_id,topic_id,learning_phase").execute()
+    }
+    if not existing_progress.data:
+        upsert_data["started_at"] = datetime.now(timezone.utc).isoformat()
+    db.table("learning_progress").upsert(
+        upsert_data, on_conflict="user_id,topic_id,learning_phase"
+    ).execute()
 
     return suggestions, exhausted
 

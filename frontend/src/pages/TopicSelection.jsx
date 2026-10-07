@@ -117,9 +117,33 @@ export default function TopicSelection() {
   };
 
   const handleContinue = async () => {
-    await handleSave();
-    if (!error) {
+    setSaving(true);
+    setError('');
+
+    const selectionList = Object.entries(selections).map(([topicId, status]) => ({
+      topic_id: Number(topicId),
+      status,
+    }));
+
+    try {
+      const res = await fetch('/api/topics/select', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ selections: selectionList }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || 'Failed to save selections');
+      }
       navigate('/assessment');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
     }
   };
 

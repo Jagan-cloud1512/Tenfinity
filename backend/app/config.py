@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     supabase_anon_key: str = ""
     supabase_service_role_key: str = ""
 
-    # Judge0
+    # Judge0 (legacy, only for local Docker setup)
     judge0_url: str = "http://localhost:2358"
 
     # Server

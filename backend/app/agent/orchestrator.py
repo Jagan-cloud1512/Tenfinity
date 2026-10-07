@@ -153,8 +153,7 @@ class AgentOrchestrator:
             )
             messages.append(assistant_msg)
 
-            for tool_name, tool_tmpl in tool_templates:
-                tc = next(tc for tc in response.tool_calls if tc["name"] == tool_name)
+            for (tool_name, tool_tmpl), tc in zip(tool_templates, response.tool_calls):
                 tool_args = tc["arguments"]
 
                 logger.info("Tool call: %s(%s)", tool_name, json.dumps(tool_args))

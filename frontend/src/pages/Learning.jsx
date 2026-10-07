@@ -635,7 +635,13 @@ export default function Learning() {
               </svg>
             </div>
             <h3 className="text-white font-semibold text-lg mb-1">All Phases Completed!</h3>
-            <p className="text-gray-400 text-sm">Congratulations! You've mastered all DSA topics. Certificate generation coming soon.</p>
+            <p className="text-gray-400 text-sm mb-3">Congratulations! You've mastered all DSA topics.</p>
+            <button
+              onClick={() => navigate('/certificate')}
+              className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium hover:shadow-lg hover:shadow-purple-500/25 transition-all cursor-pointer"
+            >
+              View & Download Certificate
+            </button>
           </div>
         )}
 

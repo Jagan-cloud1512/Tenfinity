@@ -2,6 +2,8 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .env
+.env.*
+!.env.example
 .venv/
 venv/
 node_modules/
@@ -11,4 +13,4 @@ build/
 *.log
 .DS_Store
 Thumbs.db
-.env.local
+.vercel/

@@ -204,7 +204,7 @@ export default function Results() {
               <span className="w-20 text-right">Status</span>
             </div>
             <div>
-              {strengths
+              {[...strengths]
                 .sort((a, b) => b.score_percent - a.score_percent)
                 .map((topic, i) => (
                   <StrengthRow key={topic.topic_id} topic={topic} index={i} />

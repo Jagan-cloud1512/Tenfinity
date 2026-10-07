@@ -100,14 +100,30 @@ def classify_user(user_id: str) -> dict:
         level = computed_level
 
     # Upsert classification
+    now = datetime.now(timezone.utc).isoformat()
     db.table("skill_classifications").upsert({
         "user_id": user_id,
         "mcq_score_percent": round(mcq_percent, 1),
         "coding_score_percent": round(coding_percent, 1),
         "overall_score_percent": round(overall_percent, 1),
         "level": level,
-        "classified_at": datetime.now(timezone.utc).isoformat(),
+        "classified_at": now,
     }, on_conflict="user_id").execute()
+
+    # Sync level_progression to match classification
+    # (ensures learning page uses the correct phase)
+    if progression.data:
+        current = progression.data[0]["current_phase"]
+        phase_rank = {"A": 0, "B": 1, "C": 2, "COMPLETE": 3}
+        if phase_rank.get(level, 0) > phase_rank.get(current, 0):
+            db.table("level_progression").update({
+                "initial_level": level,
+                "current_phase": level,
+                "updated_at": now,
+            }).eq("user_id", user_id).execute()
+    else:
+        from app.services.progression import initialize_progression
+        initialize_progression(user_id, level)
 
     logger.info(
         "User %s classified: MCQ=%.1f%%, Coding=%.1f%%, Overall=%.1f%% → Level %s",

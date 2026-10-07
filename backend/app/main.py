@@ -13,6 +13,7 @@ from app.routes.assessment import router as assessment_router
 from app.routes.coding_assessment import router as coding_router
 from app.routes.learning import router as learning_router
 from app.routes.final_assessment import router as final_assessment_router
+from app.routes.certificate import router as certificate_router
 
 settings = get_settings()
 
@@ -26,14 +27,17 @@ app = FastAPI(
     version="2.0.0",
 )
 
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:3000",
+]
+if settings.frontend_url and settings.frontend_url not in allowed_origins:
+    allowed_origins.insert(0, settings.frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        settings.frontend_url,
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:3000",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,6 +50,7 @@ app.include_router(assessment_router)
 app.include_router(coding_router)
 app.include_router(learning_router)
 app.include_router(final_assessment_router)
+app.include_router(certificate_router)
 
 
 @app.exception_handler(Exception)

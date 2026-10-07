@@ -105,12 +105,11 @@ async def get_user_progress(user: dict = Depends(get_current_user)) -> dict[str,
     current_phase = prog.data[0]["current_phase"]
 
     if current_phase == "COMPLETE":
-        return {"route": "/learning", "stage": "complete"}
+        return {"route": "/certificate", "stage": "complete"}
 
-    lp = db.table("learning_progress").select("topic_id").eq("user_id", uid).eq("learning_phase", current_phase).eq("learning_status", "completed").execute()
-    total_topics = db.table("dsa_topics").select("id").execute()
-
-    if len(lp.data) >= len(total_topics.data):
+    from app.services.progression import check_learning_complete
+    learning_check = check_learning_complete(uid)
+    if learning_check["complete"]:
         return {"route": "/final-assessment", "stage": "final_assessment"}
 
     return {"route": "/learning", "stage": "learning"}

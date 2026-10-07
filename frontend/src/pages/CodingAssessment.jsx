@@ -123,7 +123,7 @@ function ResultsView({ assessment, problems, onContinue }) {
         </div>
 
         <button onClick={onContinue} className="w-full py-3 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-600 text-white font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all cursor-pointer">
-          Continue to Learning Area
+          View Results &amp; Start Learning
         </button>
       </div>
     </div>
@@ -184,7 +184,7 @@ export default function CodingAssessment() {
           stopPolling();
           setAssessment(data.assessment);
           setProblems(data.problems);
-          const firstUnsolved = data.problems.findIndex(p => p.submission_status === 'pending');
+          const firstUnsolved = data.problems.findIndex(p => (!p.submission_status || p.submission_status === 'pending'));
           const idx = firstUnsolved >= 0 ? firstUnsolved : 0;
           setCurrentIdx(idx);
           setCode(data.problems[idx]?.user_code || data.problems[idx]?.starter_code || '');
@@ -225,7 +225,7 @@ export default function CodingAssessment() {
         } else if (data.assessment.status === 'in_progress') {
           setAssessment(data.assessment);
           setProblems(data.problems);
-          const firstUnsolved = data.problems.findIndex(p => p.submission_status === 'pending');
+          const firstUnsolved = data.problems.findIndex(p => (!p.submission_status || p.submission_status === 'pending'));
           const idx = firstUnsolved >= 0 ? firstUnsolved : 0;
           setCurrentIdx(idx);
           setCode(data.problems[idx]?.user_code || data.problems[idx]?.starter_code || '');
@@ -389,12 +389,12 @@ export default function CodingAssessment() {
           total_count: p.total_count,
           submission_status: p.submission_status,
         }))}
-        onContinue={() => navigate('/learning')}
+        onContinue={() => navigate('/results')}
       />
     );
   }
 
-  const submitted = currentProblem?.submission_status !== 'pending';
+  const submitted = currentProblem?.submission_status && currentProblem.submission_status !== 'pending';
 
   return (
     <div className="h-screen bg-[#0b0f1a] flex flex-col">
@@ -432,7 +432,7 @@ export default function CodingAssessment() {
             ))}
           </select>
           <span className="text-xs text-gray-500">
-            {problems.filter(p => p.submission_status !== 'pending').length}/{problems.length} submitted
+            {problems.filter(p => p.submission_status && p.submission_status !== 'pending').length}/{problems.length} submitted
           </span>
         </div>
       </div>

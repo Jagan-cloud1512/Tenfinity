@@ -126,7 +126,7 @@ function ResultsView({ assessment, problems, promotion, onContinue, onRetake }) 
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
               <span className="text-sm text-purple-400 font-medium">
-                All phases completed! Certificate phase coming soon.
+                All phases completed! Your certificate is ready.
               </span>
             </div>
           )}
@@ -257,7 +257,7 @@ export default function FinalAssessment() {
           stopPolling();
           setAssessment(data.assessment);
           setProblems(data.problems);
-          const firstUnsolved = data.problems.findIndex(p => p.submission_status === 'pending');
+          const firstUnsolved = data.problems.findIndex(p => (!p.submission_status || p.submission_status === 'pending'));
           const idx = firstUnsolved >= 0 ? firstUnsolved : 0;
           setCurrentIdx(idx);
           setCode(data.problems[idx]?.user_code || data.problems[idx]?.starter_code || '');
@@ -309,7 +309,7 @@ export default function FinalAssessment() {
         } else if (data.assessment.status === 'in_progress') {
           setAssessment(data.assessment);
           setProblems(data.problems);
-          const firstUnsolved = data.problems.findIndex(p => p.submission_status === 'pending');
+          const firstUnsolved = data.problems.findIndex(p => (!p.submission_status || p.submission_status === 'pending'));
           const idx = firstUnsolved >= 0 ? firstUnsolved : 0;
           setCurrentIdx(idx);
           setCode(data.problems[idx]?.user_code || data.problems[idx]?.starter_code || '');
@@ -544,13 +544,13 @@ export default function FinalAssessment() {
           submission_status: p.submission_status,
         }))}
         promotion={promotion}
-        onContinue={() => navigate(promotion?.current_phase === 'COMPLETE' ? '/results' : '/learning')}
+        onContinue={() => navigate(promotion?.current_phase === 'COMPLETE' ? '/certificate' : '/learning')}
         onRetake={retakeAssessment}
       />
     );
   }
 
-  const submitted = currentProblem?.submission_status !== 'pending';
+  const submitted = currentProblem?.submission_status && currentProblem.submission_status !== 'pending';
   const dc = DIFF_COLORS[currentProblem?.difficulty] || DIFF_COLORS.Easy;
 
   return (
@@ -593,7 +593,7 @@ export default function FinalAssessment() {
             ))}
           </select>
           <span className="text-xs text-gray-500">
-            {problems.filter(p => p.submission_status !== 'pending').length}/{problems.length} submitted
+            {problems.filter(p => p.submission_status && p.submission_status !== 'pending').length}/{problems.length} submitted
           </span>
         </div>
       </div>
