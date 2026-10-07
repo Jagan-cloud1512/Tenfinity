@@ -15,11 +15,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-monaco': ['@monaco-editor/react'],
-          'vendor-markdown': ['react-markdown', 'react-syntax-highlighter'],
-          'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-router': ['react-router-dom'],
+        manualChunks(id) {
+          if (id.includes('@monaco-editor')) return 'vendor-monaco'
+          if (id.includes('react-markdown') || id.includes('react-syntax-highlighter')) return 'vendor-markdown'
+          if (id.includes('@supabase')) return 'vendor-supabase'
+          if (id.includes('react-router-dom')) return 'vendor-router'
         },
       },
     },
